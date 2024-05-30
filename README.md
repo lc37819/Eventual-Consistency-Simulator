@@ -9,7 +9,9 @@ the next one. After child creation, it waits for all child processes to finish u
 and closes the log file.
 
 ## likes_server()
-A simple function that simulates a server by printing a Hello World to the standard output.
+Creates a log file /tmp/LikesServer to store the number of likes accumulated by the server. Each child process (LikesServer) live for five minutes.
+In that time each child process generates a random number of likes between 0 and 42 using the rand() function. Once the five minutes limit expire the
+number of likes are written to the log file
 
 ## fork_child()
 Uses the fork() system call to create a new process. The child process executes likes_server() and then exit. The parent process logs the start of the

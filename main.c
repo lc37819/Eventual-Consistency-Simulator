@@ -19,6 +19,7 @@ description: a program that simulates Eventual Consistency
 #define SLEEP_TIME 1
 #define CHILD_NAME_SIZE 15
 #define LOG_FILE_PATH "/tmp/ParantProcessStatus"
+#define CHILD_LIFE_TIME 300
 
 // Prototypes
 void parent_process(void);
@@ -61,14 +62,38 @@ void parent_process(void) {
 }
 
 void likes_server(const char *server_name) {
-    printf("%s: Hello, world\n", server_name);
+    int likes;
+    char log_filename[50];
+    snprintf(log_filename, sizeof(log_filename), "/tmp/%s", server_name);
+
+    int likes_log_fd = open(log_filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if (likes_log_fd < 0) {
+        perror("Could not open like server log file");
+        exit(1);
+    }
+
+    srand(time(NULL));
+
+    likes = rand() % 43;
+
+    printf("%s: Started\n", server_name);
+
+    sleep(CHILD_LIFE_TIME);
+
+    dprintf(likes_log_fd, "%s %d %d\n", server_name, likes, 0);
+
+    close(likes_log_fd);
+
+    printf("%s: Ended\n", server_name);
+
+    exit(0);
 }
 
 void fork_child(int index, int log_fd, pid_t pids[]) {
     pid_t pid = fork();
 
     if (pid < 0) {
-        perror("FOrk failed");
+        perror("Fork failed");
         exit(1);
     } else if (pid == 0) {
         char child_name[CHILD_NAME_SIZE];
@@ -113,8 +138,7 @@ void wait_for_children(int log_fd, pid_t pids[]) {
 const char* get_timestamp(void) {
     static char timestamp[100];
     time_t now = time(NULL);
-    struct tm *tstruct = localtime(&now);
-    strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %X", tstruct);
+    strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %X", localtime(&now));
     return timestamp;
 }
 

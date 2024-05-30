@@ -1,6 +1,17 @@
 ## Eventual Consistency Simulator
 ## Overview: 
-This projects simulates a consistency model called Eventual Consistency.
+This projects simulates Eventual Consistency.
+
+## Build and Run
+1. Start the server:
+gcc PrimaryLikesServer.c -o server
+./server
+
+Important: Open up a new terminal window and navigate to the project directory.
+
+2. Start the ParentProcess (create 10 child LikesServer):
+make
+./proj2
 
 ## parent_process()
 Opens the /tmp/ParentProcessStatus log file with write access, creating it if it does not exist and truncating it to zero length if it does.

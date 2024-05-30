@@ -3,7 +3,7 @@
 
 #include <sys/types.h>
 
-// Constants
+// Macro definitions
 #define NUM_CHILDREN 10
 #define SLEEP_TIME 1
 #define CHILD_NAME_SIZE 15

@@ -1,5 +1,5 @@
-# Name of my .c file
-SRCS = main.c
+# Name of my .c files
+SRCS = ParentProcess.c LikesServer.c
 
 # Name of the program that is being built
 BIN = main

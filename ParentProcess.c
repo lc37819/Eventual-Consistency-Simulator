@@ -13,22 +13,8 @@ description: a program that simulates Eventual Consistency
 #include <time.h>
 #include <sys/types.h>
 #include <fcntl.h>
-
-// Constants
-#define NUM_CHILDREN 10
-#define SLEEP_TIME 1
-#define CHILD_NAME_SIZE 15
-#define LOG_FILE_PATH "/tmp/ParantProcessStatus"
-#define CHILD_LIFE_TIME 300
-
-// Prototypes
-void parent_process(void);
-void likes_server(const char *server_name);
-void fork_child(int index, int log_fd, pid_t pids[]);
-void wait_for_children(int log_fd, pid_t pids[]);
-const char* get_timestamp(void);
-void log_child_start(int index, int log_fd);
-void log_child_end(int index, int log_fd);
+#include "ParentProcess.h"
+#include "LikesServer.h"
 
 int main(void) {
 
@@ -45,7 +31,7 @@ void parent_process(void) {
         exit(1);
     }
 
-    printf("ParentProcess started\n");
+    printf("ParentProcess Started\n");
     dprintf(log_fd, "ParentProcess started at %s\n", get_timestamp());
 
     for (int i = 0; i < NUM_CHILDREN; i++) {
@@ -56,37 +42,9 @@ void parent_process(void) {
     wait_for_children(log_fd, pids);
 
     dprintf(log_fd, "ParentProcess ended at %s\n", get_timestamp());
-    printf("ParentProcess ended\n");
+    printf("ParentProcess Ended\n");
 
     close(log_fd);
-}
-
-void likes_server(const char *server_name) {
-    int likes;
-    char log_filename[50];
-    snprintf(log_filename, sizeof(log_filename), "/tmp/%s", server_name);
-
-    int likes_log_fd = open(log_filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (likes_log_fd < 0) {
-        perror("Could not open like server log file");
-        exit(1);
-    }
-
-    srand(time(NULL));
-
-    likes = rand() % 43;
-
-    printf("%s: Started\n", server_name);
-
-    sleep(CHILD_LIFE_TIME);
-
-    dprintf(likes_log_fd, "%s %d %d\n", server_name, likes, 0);
-
-    close(likes_log_fd);
-
-    printf("%s: Ended\n", server_name);
-
-    exit(0);
 }
 
 void fork_child(int index, int log_fd, pid_t pids[]) {

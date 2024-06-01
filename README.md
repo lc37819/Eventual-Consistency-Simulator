@@ -4,19 +4,17 @@ This projects simulates Eventual Consistency.
 
 ## Build and Run
 1. Start the server:
-
+    ```code
     gcc PrimaryLikesServer.c -o server
 
     ./server
-
 2. Important: Open up a new terminal window and navigate to the project directory.
 
 3. Start the ParentProcess (create 10 child LikesServers):
-
+    ```code
     make
 
     ./proj2
-
 4. Open a new Terminal and navigate to the /tmp directory to view the log files
 
 ## parent_process()
@@ -44,12 +42,14 @@ Logs the end of each child process to the /tmp/ParentProcessStatus log file, inc
 
 ## likes_server()
 Creates a log file /tmp/LikesServer to store the number of likes accumulated by the server. Each child process (LikesServer) live for five minutes i.e
-300 seconds. After five minutes the child process generates a random number of likes between 0 and 42 using the rand() function. The child name and number 
-of likes are written to a log. Example /tmp/LikesServer0 in this format “LikesServer0 14”. The file is closed and the send_likes_to_server function is called.
+300 seconds. During those five minutes the child process generates a random number of likes between 0 and 42 and send those likes to the PrimaryLikesServer
+every 1 to 5 seconds. The child name and number of likes are written to a log. Example /tmp/LikesServer0 in this format “LikesServer0 14”. The file is closed
+and the send_likes_to_server function is called.
 
 ## send_likes_to_server
-Takes the server_name and number of likes as parameters. Creates a client socket, waits for a random interval 1 to 5 seconds to notify the PrimaryLikesServer. checks the socket creation, prepares the message, sends the message to the PrimaryLikesServer, displays the number of likes sent to the PrimaryLikesServer to stdout for testing/debuging, if a responds is sent from the PrimaryLikesServer the likes counter is reset and the client socket is closed.
-
+Takes the server_name and number of likes as parameters. Creates a client socket. checks the socket creation, prepares the message, sends the message to the
+PrimaryLikesServer, displays the number of likes sent to the PrimaryLikesServer to stdout for testing/debuging, if a response is sent from the PrimaryLikesServer
+the likes counter is reset and the client socket is closed.
 
 ## PrimaryLikesServer
 Creates and configue a TCP socket, accepts connections and reads data from each individual LikesServer. Process the received data using the validate_data helper function, and logs this data to the "/tmp/PrimaryLikesLog" file. Lastly an acknowledgment message "ACK" back to the client. If the send operation fails, an error is displayed, and the server exits. Then the log file and the server socket are closed before exiting the program.

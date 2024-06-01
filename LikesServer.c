@@ -23,13 +23,18 @@ void likes_server(const char *server_name) {
 
     printf("%s: Started\n", server_name);
 
-    sleep(CHILD_LIFE_TIME);
+    time_t start_time = time(NULL);
+    while (time(NULL) - start_time < CHILD_LIFE_TIME) {
+        srand(time(NULL) ^ (getpid() << 16));
+        likes = rand() % 43;
 
-    srand(time(NULL) ^ (getpid() << 16));
+        dprintf(likes_log_fd, "%s %d %d\n", server_name, likes, 0);
 
-    likes = rand() % 43;
+        send_likes_to_server(server_name, likes);
 
-    dprintf(likes_log_fd, "%s %d %d\n", server_name, likes, 0);
+        int wait_time = (rand() % 5) + 1;
+        sleep(wait_time);
+    }
 
     close(likes_log_fd);
 

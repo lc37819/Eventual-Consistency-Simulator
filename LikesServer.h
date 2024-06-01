@@ -2,7 +2,7 @@
 #define LIKESSERVER_H
 
 // Macro definitions
-#define CHILD_LIFE_TIME 30
+#define CHILD_LIFE_TIME 300
 #define PORT 54321
 
 // Prototypes

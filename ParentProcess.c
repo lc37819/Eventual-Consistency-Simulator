@@ -67,6 +67,7 @@ void fork_child(int index, int log_fd, pid_t pids[]) {
 void wait_for_children(int log_fd, pid_t pids[]) {
     int status;
     int remaining_children = NUM_CHILDREN;
+    int all_success = 1;
 
     while (remaining_children > 0) {
         pid_t done = wait(&status);
@@ -84,12 +85,22 @@ void wait_for_children(int log_fd, pid_t pids[]) {
 
             if (child_index != -1) {
                 log_child_end(child_index, log_fd);
+                if (WIFEXITED(status) && WEXITSTATUS(status) != 0) {
+                    all_success = 0;
+                    dprintf(log_fd, "LikesServer%d (PID: %d) exited with error code %d at %s\n", child_index, done, WEXITSTATUS(status), get_timestamp());
+                }
             } else {
                 dprintf(log_fd, "Error: Unknown child PID %d ended at %s\n", done, get_timestamp());
             }
 
             remaining_children--;
         }
+    }
+
+    if (all_success) {
+        dprintf(log_fd, "All children exited successfully\n");
+    } else {
+        dprintf(log_fd, "Children did not exit successfully at %s\n", get_timestamp());
     }
 }
 

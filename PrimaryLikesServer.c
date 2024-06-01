@@ -5,11 +5,14 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <errno.h>
+#include <stdbool.h>
 
 #define PORT 54321
 #define BACKLOG 10
 #define BUFFER_SIZE 1024
 #define LOG_FILE_PATH "/tmp/PrimaryLikesLog"
+
+bool validate_data(const char *buffer, int *likes);
 
 int main() {
     int server_fd, new_socket, valread;
@@ -64,8 +67,14 @@ int main() {
             exit(EXIT_FAILURE);
         }
 
-        int likes = 0;
-        sscanf(buffer, "%*s %d", &likes);
+        int likes;
+        if (!validate_data(buffer, &likes)) {
+            fprintf(log_file, "Invalid data received: %s\n", buffer);
+            fflush(log_file);
+            close(new_socket);
+            continue;
+        }
+
         total_likes += likes;
         fprintf(log_file, "%s\nTotal %d\n", buffer, total_likes);
         fflush(log_file);
@@ -82,4 +91,15 @@ int main() {
     close(server_fd);
 
     return 0;
+}
+
+bool validate_data(const char *buffer, int *likes) {
+    char server_name[15];
+    int scan_count = sscanf(buffer, "%s %d", server_name, likes);
+
+    if (scan_count != 2 || strncmp(server_name, "LikesServer", 11) != 0 || *likes < 0 || *likes > 42) {
+        return false;
+    }
+
+    return true;
 }

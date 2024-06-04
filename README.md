@@ -1,8 +1,8 @@
 ## Eventual Consistency Simulator
 This projects simulates Eventual Consistency.
 
-Eventual consistency is a consistency model used in distributed computing to achieve high availability that informally guarantees that, if no
-new updates are made to a given data item, eventually all accesses to that item will return the last updated value.
+## Completion Date
+Saturday, November 11, 2023.
 
 ## Build and Run
 1. Start the server:
@@ -10,15 +10,19 @@ new updates are made to a given data item, eventually all accesses to that item 
     gcc PrimaryLikesServer.c -o server
 
     ./server
-2. Important: Open up a new terminal window and navigate to the project directory.
+2. Important: Open a new terminal window and navigate to the project directory.
 
 3. Start the ParentProcess (create 10 child LikesServers):
     ```code
     make
 
     ./main
-4. Open a new Terminal and navigate to the /tmp directory to view the log files
+4. Open a new Terminal windowand navigate to the /tmp directory to view the log files
 
+## Demo
+https://github.com/lc37819/Eventual-Consistency-Simulator/assets/144269662/058f6df3-2380-483a-896f-7ce0a20af19c
+
+## Documentation
 ## parent_process()
 Opens the /tmp/ParentProcessStatus log file with write access, creating it if it does not exist and truncating it to zero length if it does.
 Logs the start of the parent process, then enters a loop to create 10 child LikesServer using fork_child() and waits one second before creating 

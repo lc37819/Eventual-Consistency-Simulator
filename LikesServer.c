@@ -38,16 +38,12 @@ void likes_server(const char *server_name) {
 
     close(likes_log_fd);
 
-    send_likes_to_server(server_name, likes);
-
     printf("%s: Ended\n", server_name);
 
     exit(0);
 }
 
 void send_likes_to_server(const char *server_name, int likes){
-    int notify_interval = (rand() % 5) + 1;
-    sleep(notify_interval);
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     struct sockaddr_in serv_addr;
 

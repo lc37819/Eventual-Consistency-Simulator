@@ -1,6 +1,8 @@
 ## Eventual Consistency Simulator
-## Overview: 
 This projects simulates Eventual Consistency.
+
+Eventual consistency is a consistency model used in distributed computing to achieve high availability that informally guarantees that, if no
+new updates are made to a given data item, eventually all accesses to that item will return the last updated value.
 
 ## Build and Run
 1. Start the server:
@@ -14,7 +16,7 @@ This projects simulates Eventual Consistency.
     ```code
     make
 
-    ./proj2
+    ./main
 4. Open a new Terminal and navigate to the /tmp directory to view the log files
 
 ## parent_process()

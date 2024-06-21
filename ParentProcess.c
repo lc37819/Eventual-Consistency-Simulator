@@ -2,7 +2,6 @@
 project: Eventual Consistency
 author: Elton Gbollie
 email: lc37819@umbc.edu
-student id: lc37819
 description: a program that simulates Eventual Consistency
 */
 
